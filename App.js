@@ -1,21 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+export default class Login extends Component {
+  render() {
+    return (
+      <View>
+        <LoginButton
+          onLoginFinished={
+            (error, result) => {
+              if (error) {
+                console.log("login has error: " + result.error);
+              } else if (result.isCancelled) {
+                console.log("login is cancelled.");
+              } else {
+                AccessToken.getCurrentAccessToken().then(
+                  (data) => {
+                    console.log(data.accessToken.toString())
+                  }
+                )
+              }
+            }
+          }
+          onLogoutFinished={() => console.log("logout.")}/>
+      </View>
+    );
+  }
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
